@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionItems extends Model
 {
     //
+    use softDeletes;
+    
     protected $fillable = [
         'code',
         'transaction_id',

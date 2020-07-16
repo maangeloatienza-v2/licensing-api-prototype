@@ -10,7 +10,8 @@ class Transactions extends Model
 
     protected $fillable = [
         'user_id',
-        'code'
+        'code',
+        'status'
     ];
 
     public function transactionItems(){
