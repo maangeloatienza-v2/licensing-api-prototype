@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Transactions;
-use App\Http\Resources\TransactionResource;
+use App\User;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 
-class TransactionController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,8 @@ class TransactionController extends Controller
     public function index()
     {
         //
-        return TransactionResource::collection(Transactions::paginate(10));
+
+        return UserResource::collection(User::paginate(10));
     }
 
     /**
@@ -29,13 +30,18 @@ class TransactionController extends Controller
     {
         //
 
-        $transaction = Transactions::create([
-            'code' => $request->code,
-            'user_id' => $request->user_id,
-            'status' => $request->status
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'password' => 'required'
         ]);
 
-        return TransactionResource($transaction);
+        $request->password = Hash::make($request->password);
+
+        $user = User::create($request->all());
+
+        return new UserResource($user);
     }
 
     /**
@@ -44,11 +50,11 @@ class TransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Transactions $transactions)
+    public function show(User $user)
     {
         //
 
-        return new TransactionResource($transactions);
+        return new UserResource($user);
     }
 
     /**

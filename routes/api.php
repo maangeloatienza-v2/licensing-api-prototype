@@ -14,8 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::apiResource('products', 'ProductController');
+
+
+Route::apiResource('products', 'ProductController')
+    ->only(['index','show','store','update','destroy']);
+Route::apiResource('transactions', 'TransactionController')
+    ->only(['index','show','store','update','destroy']);
+Route::apiResource('users', 'UserController')
+    ->only(['index','show','store','update','destroy']);
+
+Route::post('/login', 'LoginController@login');
+Route::post('/register', 'AuthController@register');

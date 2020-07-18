@@ -17,7 +17,6 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('license_key',64);
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -29,9 +28,7 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products',function (Blueprint $table){
-            $table->dropSoftDeletes();
-        });
-        
+        Schema::dropIfExists('products');
+
     }
 }
