@@ -23,7 +23,7 @@ class AuthController extends Controller
         return $this->respondWithToken($token,Auth::user());
     }
 
-    public function login(Request $request, User $user){
+    public function login(Request $request){
         $reqBody = $request->only([
             'email',
             'password'
@@ -41,8 +41,21 @@ class AuthController extends Controller
     public function respondWithToken($token,$user){
         return response()->json([
             'data' => $user,
+            'message' => 'Logged in successfully',
             'token' => 'Bearer '.$token,
-            'expires_in' => auth()->factory()->getTTL() *60
-        ]);
+            'expires_in' => $this->guard()->factory()->getTTL() * 60
+        ],200);
+    }
+
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        return response()->json(['message' => 'Successfully logged out'],200);
+    }
+
+    public function guard()
+    {
+        return Auth::guard();
     }
 }
