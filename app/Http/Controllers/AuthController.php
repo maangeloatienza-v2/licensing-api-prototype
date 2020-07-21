@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\User;
+use Auth;
 
 use Illuminate\Http\Request;
 
@@ -19,10 +20,10 @@ class AuthController extends Controller
 
         $token = auth()->login($user);
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token,Auth::user());
     }
 
-    public function login(){
+    public function login(Request $request, User $user){
         $reqBody = $request->only([
             'email',
             'password'
@@ -33,10 +34,13 @@ class AuthController extends Controller
                 'error' => 'Unauthorized'
             ],401);
         }
+
+        return $this->respondWithToken($token,Auth::user());
     }
 
-    public function respondWithToken($token){
+    public function respondWithToken($token,$user){
         return response()->json([
+            'data' => $user,
             'token' => 'Bearer '.$token,
             'expires_in' => auth()->factory()->getTTL() *60
         ]);

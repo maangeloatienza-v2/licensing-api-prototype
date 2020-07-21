@@ -27,5 +27,5 @@ Route::apiResource('transactions', 'TransactionController')
 Route::apiResource('users', 'UserController')
     ->only(['index','show','store','update','destroy']);
 
-Route::post('/login', 'LoginController@login');
+Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AuthController@register');

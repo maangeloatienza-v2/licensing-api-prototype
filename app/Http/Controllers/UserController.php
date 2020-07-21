@@ -64,9 +64,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        if ($request->user()->id !== $user->id) {
+            return response()->json(['error' => 'Updating other\'s account is prohibited.'], 403);
+          }
+
+          $book->update($request->only(['first_name', 'last_name']));
+
+          return new UserResource($user);
     }
 
     /**
