@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     //
+    public function __construct()
+    {
+      $this->middleware('auth:api')->except(['register', 'login']);
+    }
 
     public function register(Request $request){
 
@@ -31,6 +35,7 @@ class AuthController extends Controller
 
         if(!$token = auth()->attempt($reqBody)) {
             return response()->json([
+                'message' => 'Invalid username/password',
                 'error' => 'Unauthorized'
             ],401);
         }
