@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Transactions;
+use JWTAuth;
 use App\Http\Resources\TransactionResource;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,7 @@ class TransactionController extends Controller
 
         $transaction = Transactions::create([
             'code' => $request->code,
-            'user_id' => $request->user_id,
+            'user_id' => JWTAuth::user()['id'],
             'status' => $request->status
         ]);
 
@@ -58,9 +59,17 @@ class TransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Transaction $transaction)
     {
         //
+
+        if($request->transaction()->id !== $transaction->id){
+            return response()->json(['error' => 'Updating trasaction is prohibited.'], 403);
+        }
+
+        $transaction->update($request->only(['status']));
+
+        return new TransactionResource($transaction);
     }
 
     /**
