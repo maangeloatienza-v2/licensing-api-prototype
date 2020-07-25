@@ -70,7 +70,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Updating other\'s account is prohibited.'], 403);
           }
 
-          $book->update($request->only(['first_name', 'last_name']));
+          $user->update($request->only(['first_name', 'last_name']));
 
           return new UserResource($user);
     }

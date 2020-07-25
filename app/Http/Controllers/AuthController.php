@@ -24,7 +24,10 @@ class AuthController extends Controller
 
         $token = auth()->login($user);
 
-        return $this->respondWithToken($token,Auth::user());
+        return $this->respondWithToken(
+            $token,
+            'Account created successfully',
+            Auth::user());
     }
 
     public function login(Request $request){
@@ -36,17 +39,20 @@ class AuthController extends Controller
         if(!$token = auth()->attempt($reqBody)) {
             return response()->json([
                 'message' => 'Invalid username/password',
-                'error' => 'Unauthorized'
-            ],401);
+                'context' => 'Unauthorized'
+            ],500);
         }
 
-        return $this->respondWithToken($token,Auth::user());
+        return $this->respondWithToken(
+            $token,
+            'Logged in successfully',
+            Auth::user());
     }
 
-    public function respondWithToken($token,$user){
+    public function respondWithToken($token,$message,$user){
         return response()->json([
             'data' => $user,
-            'message' => 'Logged in successfully',
+            'message' => $message,
             'token' => 'Bearer '.$token,
             'expires_in' => $this->guard()->factory()->getTTL() * 60
         ],200);
