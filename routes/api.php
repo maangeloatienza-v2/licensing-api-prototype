@@ -20,13 +20,17 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::apiResource('products', 'ProductController')
-    ->only(['index','show','store','update','destroy']);
-Route::apiResource('transactions', 'TransactionController')
-    ->only(['index','show','store','update','destroy']);
-Route::apiResource('users', 'UserController')
-    ->only(['index','show','store','update','destroy']);
+
 
 Route::post('/login', 'AuthController@login');
 Route::post('/logout', 'AuthController@logout');
 Route::post('/register', 'AuthController@register');
+
+Route::group(['middleware' => ['jwt.verify']], function (){
+    Route::apiResource('products', 'ProductController')
+    ->only(['index','show','store','update','destroy']);
+    Route::apiResource('transactions', 'TransactionController')
+        ->only(['index','show','store','update','destroy']);
+    Route::apiResource('users', 'UserController')
+        ->only(['index','show','store','update','destroy']);
+});
