@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Transactions;
 use App\User;
+use App\TransactionItems;
 use JWTAuth;
 use App\Http\Resources\TransactionResource;
 use App\Http\Resources\TransactionCollection;
@@ -48,13 +49,18 @@ class TransactionController extends Controller
     {
         //
         $random = Str::random(10);
-        $transaction = Transactions::create([
+        $cart = Transactions::create([
             'code' => $random,
-            'user_id' => JWTAuth::user()['id'],
-            'status' => $request->status
+            'status' => false,
+            'user_id' => JWTAuth::user()['id']
         ]);
+        $fields = ['user_id' => JWTAuth::user()['id']];
 
-        return new TransactionResource($transaction);
+        TransactionItems::whereNull('transaction_id')
+        ->where($fields)
+        ->update(['transaction_id' => $cart->id]);
+
+        return new TransactionResource($cart);
     }
 
     /**

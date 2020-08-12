@@ -27,6 +27,8 @@ Route::post('/register', 'AuthController@register');
 
 Route::group(['middleware' => ['jwt.verify']], function (){
     Route::post('/logout', 'AuthController@logout');
+
+
     Route::apiResource('products', 'ProductController')
         ->only(['index','show','store','update','destroy']);
     Route::apiResource('transactions', 'TransactionController')
