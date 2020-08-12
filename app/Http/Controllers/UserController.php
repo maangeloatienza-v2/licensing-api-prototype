@@ -13,10 +13,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(User $user)
+    public function index(Request $request,User $user)
     {
         //
-
+        $first_name = $request->query('first_name');
+        // dd($first_name);
         return UserResource::collection(User::paginate(10));
     }
 

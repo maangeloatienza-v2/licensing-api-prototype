@@ -7,26 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionItems extends Model
 {
     //
-    use softDeletes;
-    
+
     protected $fillable = [
         'code',
-        'transaction_id',
         'product_id',
-        'user_id',
-        'status'
+        'user_id'
     ];
 
 
-    public function transactions(){
+    public function transaction(){
         return $this->belongsTo('App\Transactions');
     }
 
-    public function products(){
+    public function product(){
         return $this->belongsTo('App\Products');
     }
 
-    public function users(){
-        return $this->belongsTo('App\Users');
+    public function user(){
+        return $this->belongsTo('App\User');
     }
 }

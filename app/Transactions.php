@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\models\User;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,7 @@ class Transactions extends Model
         return $this->hasMany('App\TransactionItems');
     }
 
-    public function users(){
-        return $this->hasOne('App\Users');
+    public function user(){
+        return $this->belongsTo('App\User');
     }
 }

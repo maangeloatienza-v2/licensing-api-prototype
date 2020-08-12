@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Transactions;
+use App\User;
 use JWTAuth;
 use App\Http\Resources\TransactionResource;
+use App\Http\Resources\TransactionCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class TransactionController extends Controller
 {
@@ -14,10 +18,24 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index():TransactionCollection
     {
         //
-        return TransactionResource::collection(Transactions::paginate(10));
+
+        return new TransactionCollection(Transactions::
+        with(
+            array(
+                'user' => function($user){
+                    $user->select(
+                        'id',
+                        'first_name',
+                        'last_name',
+                        'email'
+                    );
+                }
+            )
+        )
+        ->paginate(10));
     }
 
     /**
@@ -29,14 +47,14 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         //
-
+        $random = Str::random(10);
         $transaction = Transactions::create([
-            'code' => $request->code,
+            'code' => $random,
             'user_id' => JWTAuth::user()['id'],
             'status' => $request->status
         ]);
 
-        return TransactionResource($transaction);
+        return new TransactionResource($transaction);
     }
 
     /**
@@ -45,11 +63,10 @@ class TransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Transactions $transactions)
+    public function show(Transactions $transaction)
     {
-        //
 
-        return new TransactionResource($transactions);
+        return new TransactionResource($transaction->load('user'));
     }
 
     /**

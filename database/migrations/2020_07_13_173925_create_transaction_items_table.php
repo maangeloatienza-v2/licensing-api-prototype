@@ -28,8 +28,6 @@ class CreateTransactionItemsTable extends Migration
                   ->foreign('user_id')
                   ->references('id')->on('users')
                   ->onDelete('cascade');
-            $table->boolean('status',false);
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -41,8 +39,6 @@ class CreateTransactionItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transaction_items',function (Blueprint $table){
-            $table->dropSoftDeletes();
-        });
+        Schema::dropIfExists('transaction_items');
     }
 }
